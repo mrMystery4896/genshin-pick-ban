@@ -20,6 +20,7 @@ export default function PickBan({ socket }) {
 	});
 	const [turnInfo, setTurnInfo] = useState({ action: "ban", isPlayersTurn: false });
 	const [time, setTime] = useState(0);
+	const [playerReserveTime, setPlayerReserveTime] = useState(120);
 	const { roomId } = useParams();
 	const userId = useUserId();
 
@@ -47,6 +48,11 @@ export default function PickBan({ socket }) {
 			socket.off();
 		};
 	}, []);
+
+	useEffect(() => {
+		getPlayerReserveTime();
+		console.log(playerReserveTime);
+	}, [roomData]);
 
 	const pickCharacter = () => {
 		socket.emit("selectCharacter", hoveredCharacter.character.name, roomId, userId, (res) => {
@@ -76,10 +82,16 @@ export default function PickBan({ socket }) {
 		return `${player} turn to ${action}`;
 	};
 
+	const getPlayerReserveTime = () => {
+		const player = roomData.players.find((player) => player.playerId === userId);
+		setPlayerReserveTime(player?.reserveTime);
+	};
+
 	return (
 		<div>
 			<h1>Pick Ban</h1>
 			<h2>{displayTurnMessage()}</h2>
+			<h2>Reserve Time: {playerReserveTime}</h2>
 			<h2>{time}</h2>
 			<button onClick={startTimer}>Start Timer</button>
 			<div style={{ display: "flex", flexWrap: "wrap", width: "80%" }}>
