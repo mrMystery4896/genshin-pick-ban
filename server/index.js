@@ -4,7 +4,7 @@ const socketio = require("socket.io");
 const cors = require("cors");
 const bp = require("body-parser");
 const router = require("./router");
-const { rooms, checkPlayerIsInRoom, getRoom } = require("./rooms");
+const { checkPlayerIsInRoom, getRoom } = require("./rooms");
 const Room = require("./roomClass");
 const app = express();
 const server = http.createServer(app);
@@ -76,12 +76,26 @@ io.on("connection", (socket) => {
 	socket.on("timerStart", (roomId) => {
 		let room = getRoom(roomId);
 		let countDown = setInterval(() => {
-			io.to(roomId).emit("timeChanged", room.currentTime);
-			room.currentTime--;
-			if (room.currentTime === 0) {
+			if (room.currentTime > 0) {
+				io.to(roomId).emit("timeChanged", room.currentTime);
+				room.currentTime--;
+			}
+			//when 30 seconds is over and player does not have reserve time, increment turn count
+			if (
+				room.currentTime === 0 &&
+				room.players[Room.pickBanOrder[room.turnCount].player].reserveTime === 0
+			) {
 				room.currentTime = 30;
 				room.turnCount++;
 				io.to(roomId).emit("turnChanged");
+			} //when 30 seconds is over and player still has reserve time, start startReserveTime function
+			else if (
+				room.currentTime === 0 &&
+				room.players[Room.pickBanOrder[room.turnCount].player].reserveTime > 0
+			) {
+				let currentPlayer = room.players[Room.pickBanOrder[room.turnCount].player];
+				io.to(room.roomId).emit("timeChanged", currentPlayer.reserveTime);
+				currentPlayer.reserveTime--;
 			}
 		}, 1000);
 	});
