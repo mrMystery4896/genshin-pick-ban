@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import CharacterTalentIcon from "./CharacterTalentIcon";
 
 export default function CharacterDetailPane({ character }) {
+	//console.log(character) on mount
+	useEffect(() => {
+		console.log(character);
+	}, []);
+
+	const getImageUrl = (image) => {
+		return `https://res.cloudinary.com/genshin/image/upload/sprites/${image}.png`;
+	};
+
 	return (
 		<div style={{ width: "700px" }}>
 			<h1>{character.character.name}</h1>
@@ -19,30 +29,30 @@ export default function CharacterDetailPane({ character }) {
 				</div>
 			</div>
 			{character.talent && (
-				<div className='talent-icon-container' style={{ display: "flex", width: "700px" }}>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.combat1}.png`}
-						alt={character.talent.combat1.name}
+				<div className="talent-icon-container" style={{ display: "flex", width: "700px" }}>
+					<CharacterTalentIcon
+						talent={character.talent.combat1}
+						image={getImageUrl(character.talent.images.combat1)}
 					/>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.combat2}.png`}
-						alt={character.talent.combat2.name}
+					<CharacterTalentIcon
+						talent={character.talent.combat2}
+						image={getImageUrl(character.talent.images.combat2)}
 					/>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.combat3}.png`}
-						alt={character.talent.combat3.name}
+					<CharacterTalentIcon
+						talent={character.talent.combat3}
+						image={getImageUrl(character.talent.images.combat3)}
 					/>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.passive1}.png`}
-						alt={character.talent.passive1.name}
+					<CharacterTalentIcon
+						talent={character.talent.passive1}
+						image={getImageUrl(character.talent.images.passive1)}
 					/>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.passive2}.png`}
-						alt={character.talent.passive2.name}
+					<CharacterTalentIcon
+						talent={character.talent.passive2}
+						image={getImageUrl(character.talent.images.passive2)}
 					/>
-					<img
-						src={`https://res.cloudinary.com/genshin/image/upload/sprites/${character.talent.images.passive3}.png`}
-						alt={character.talent.passive3.name}
+					<CharacterTalentIcon
+						talent={character.talent.passive3}
+						image={getImageUrl(character.talent.images.passive3)}
 					/>
 				</div>
 			)}
