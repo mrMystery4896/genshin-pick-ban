@@ -2,11 +2,6 @@ import React, { useEffect } from "react";
 import CharacterTalentIcon from "./CharacterTalentIcon";
 
 export default function CharacterDetailPane({ character }) {
-	//console.log(character) on mount
-	useEffect(() => {
-		console.log(character);
-	}, []);
-
 	const getImageUrl = (image) => {
 		return `https://res.cloudinary.com/genshin/image/upload/sprites/${image}.png`;
 	};

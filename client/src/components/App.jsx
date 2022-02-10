@@ -5,12 +5,10 @@ import Room from "./Room";
 import { CharacterProvider } from "../contexts/CharacterContext";
 
 /*//TODO:
-	1. Implement Timer feature
 	3. Implement spectator feature
-	4. Finish PickedBanned Component (Display picked banned character icons)
-	5. Implement hover skill icon to show detail
 	6. Implement voice lines when picking and banning
 	7. Implement feature that only start game when both player is ready
+	8. Implement feature that ends game when max turn count is reached
 */
 function App() {
 	return (

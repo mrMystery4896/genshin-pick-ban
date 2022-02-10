@@ -9,6 +9,7 @@ export const CharacterProvider = (props) => {
 
 	useEffect(() => {
 		setLoading(true);
+
 		//get all character name in an array
 		const allCharacterName = genshindb.characters("names", { matchCategories: true });
 		//loop through the array and get details and talents for the character and push it into the state array

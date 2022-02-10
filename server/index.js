@@ -43,6 +43,10 @@ io.on("connection", (socket) => {
 	//when user initially joins the room, return if current turn is his turn
 	socket.on("joinedRoom", (roomId, userId, callback) => {
 		let room = getRoom(roomId);
+		//check if there are 2 players in the room, if yes, start the game
+		if (room.players.find((player) => player.playerId === "") === undefined) {
+			startTimer(roomId);
+		}
 		callback({
 			room,
 			turnInfo: {
@@ -73,7 +77,7 @@ io.on("connection", (socket) => {
 		return callback(matchedRoom);
 	});
 
-	socket.on("timerStart", (roomId) => {
+	function startTimer(roomId) {
 		let room = getRoom(roomId);
 		let countDown = setInterval(() => {
 			if (room.currentTime > 0) {
@@ -98,11 +102,10 @@ io.on("connection", (socket) => {
 				currentPlayer.reserveTime--;
 			}
 		}, 1000);
-	});
+	}
 
 	socket.on("leaveRoom", (roomId, userId) => {
 		let room = getRoom(roomId);
-		console.log(room);
 		//remove user from player list
 		// if (room.players[0].playerId === userId) {
 		// 	room.players[0].playerId = "";

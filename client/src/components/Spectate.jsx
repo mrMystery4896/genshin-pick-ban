@@ -5,21 +5,22 @@ import PickedBannedCharacters from "./PickedBannedCharacters";
 
 export default function Spectate({ socket }) {
 	const [roomData, setRoomData] = useState({});
+	const [time, setTime] = useState(30);
 	const { roomId } = useParams();
-	const userId = useUserId();
 
 	useEffect(() => {
 		socket.on("turnChanged", () => {
-			console.log("turnChanged");
 			socket.emit("spectatorGetRoomData", roomId, (res) => {
-				console.log("spectatorGetRoomData emitted");
 				setRoomData(res);
 			});
 		});
 
 		socket.emit("spectatorGetRoomData", roomId, (res) => {
-			console.log("spectatorGetRoomData emitted");
 			setRoomData(res);
+		});
+
+		socket.on("timeChanged", (time) => {
+			setTime(time);
 		});
 
 		return () => {
@@ -27,13 +28,10 @@ export default function Spectate({ socket }) {
 		};
 	}, []);
 
-	useEffect(() => {
-		console.log("Room Data: ", roomData);
-	}, [roomData]);
-
 	return roomData.players ? (
 		<div>
 			<h1>Spectate</h1>
+			<h1>{time}</h1>
 			{roomData.players.map((player, index) => {
 				return <PickedBannedCharacters key={index} player={player} />;
 			})}

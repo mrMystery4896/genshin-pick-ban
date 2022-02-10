@@ -27,15 +27,12 @@ export default function PickBan({ socket }) {
 	useEffect(() => {
 		//get new room data from server whenever a turn has passed
 		socket.on("turnChanged", () => {
-			console.log("turnChanged");
 			socket.emit("getRoomData", roomId, userId, ({ turnInfo, roomData }) => {
-				console.log("getRoomData emitted");
 				setTurnInfo(turnInfo);
 				setRoomData(roomData);
 			});
 		});
 		socket.emit("joinedRoom", roomId, userId, (res) => {
-			console.log("joinedRoom emitted");
 			setTurnInfo(res.turnInfo);
 			setRoomData(res.room);
 		});
@@ -51,14 +48,16 @@ export default function PickBan({ socket }) {
 
 	useEffect(() => {
 		getPlayerReserveTime();
-		console.log(playerReserveTime);
 	}, [roomData]);
 
 	const pickCharacter = () => {
-		socket.emit("selectCharacter", hoveredCharacter.character.name, roomId, userId, (res) => {
-			console.log("selectCharacter emitted");
-			console.log(res);
-		});
+		socket.emit(
+			"selectCharacter",
+			hoveredCharacter.character.name,
+			roomId,
+			userId,
+			(res) => {}
+		);
 	};
 
 	const isSelected = (characterName) => {
@@ -70,10 +69,6 @@ export default function PickBan({ socket }) {
 				return true;
 		}
 		return false;
-	};
-
-	const startTimer = () => {
-		socket.emit("timerStart", roomId);
 	};
 
 	const displayTurnMessage = () => {
@@ -93,7 +88,6 @@ export default function PickBan({ socket }) {
 			<h2>{displayTurnMessage()}</h2>
 			<h2>Reserve Time: {playerReserveTime}</h2>
 			<h2>{time}</h2>
-			<button onClick={startTimer}>Start Timer</button>
 			<div style={{ display: "flex", flexWrap: "wrap", width: "80%" }}>
 				{characters &&
 					characters.map((character) => {
